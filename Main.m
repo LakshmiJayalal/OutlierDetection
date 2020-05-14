@@ -1,21 +1,22 @@
 clear all
 close all
+resolution=1;
 %-------------- Get data--------------------------
-D=double(image_fn(1,1));
+D=double(image_fn(1,resolution));
 D=normc(D);
 % -------------- Subspace recovery -------------------------------
 
 
 % -------------- Algorithm 1 Subspace recovery using isearch -------------
 [N,c]=size(D);
-    Cstar=zeros(N,c);
-beta1 =0.5;
+Cstar=zeros(N,c);
 alpha=1.2;
 invHtH= inv(D*D' + beta1*eye(size(D,1)));
 obj_val=zeros(1,c);
+rho=1000;
 for i = 1:c
     disp(i)
-    [chat,~] = admm(D,(D(:,i))',invHtH,1000,1.2);% 
+    [chat,~] = admm(D,(D(:,i))',invHtH,rho,alpha);% 
     Cstar(:,i)=chat;
     obj_val(i)=norm(chat'*D,1);  
 end
