@@ -2,6 +2,7 @@ clear all
 close all
 %-------------- Get data--------------------------
 D=double(image_fn(1,1));
+D=normc(D);
 % -------------- Subspace recovery -------------------------------
 
 
@@ -13,12 +14,10 @@ alpha=1.2;
 invHtH= inv(D*D' + beta1*eye(size(D,1)));
 obj_val=zeros(1,c);
 for i = 1:c
-     disp(i)
+    disp(i)
     [chat,~] = admm(D,(D(:,i))',invHtH,1000,1.2);% 
-%     chat = basis_pursuit(Pinv_D,D,D(:,i)',1,rho1,alpha1);
     Cstar(:,i)=chat;
-    obj_val(i)=norm(chat'*D,1);
-   
+    obj_val(i)=norm(chat'*D,1);  
 end
 %Step 2: Direction search
 x=1./vecnorm(D'*Cstar,1);
